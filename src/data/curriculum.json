@@ -1,0 +1,192 @@
+{
+  "id": "react-senior-path",
+  "title": "React Senior Developer Path",
+  "days": [
+    {
+      "day": 1,
+      "topic": "React 19 & NextJS Intro",
+      "description": "Analyzing React 19 Core updates, compiler hooks, and hydration mechanics.",
+      "durationMinutes": 60
+    },
+    {
+      "day": 2,
+      "topic": "Virtual DOM vs Real DOM",
+      "description": "Under-the-hood analysis of rendering loops and reconciliation algorithm.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 3,
+      "topic": "Advanced Context API & Prop Drilling",
+      "description": "Architecting multi-level state containers and managing context updates efficiently.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 4,
+      "topic": "Zustand State Engine",
+      "description": "State management without providers. Creating global stores with middleware.",
+      "durationMinutes": 75
+    },
+    {
+      "day": 5,
+      "topic": "Custom Hook Design Patterns",
+      "description": "Isolating logic, side effects, and state behaviors into clean custom hook layers.",
+      "durationMinutes": 100
+    },
+    {
+      "day": 6,
+      "topic": "UseEffect Lifecycle Pitfalls",
+      "description": "How to avoid infinite render cycles, clean up listeners, and synchronize state.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 7,
+      "topic": "Concurrent Rendering Features",
+      "description": "Demystifying StartTransition, UseDeferredValue, and concurrent priorities.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 8,
+      "topic": "Error Boundaries and Recovery",
+      "description": "Catching frontend crashes gracefully and implementing fallback recovery states.",
+      "durationMinutes": 70
+    },
+    {
+      "day": 9,
+      "topic": "TypeScript Generics in React",
+      "description": "Configuring typed generic components, custom event callbacks, and polymorphic elements.",
+      "durationMinutes": 120
+    },
+    {
+      "day": 10,
+      "topic": "Tailwind Styling Best Practices",
+      "description": "Tailwind CSS v4 class organization, design token integrations, and css transitions.",
+      "durationMinutes": 60
+    },
+    {
+      "day": 11,
+      "topic": "Glassmorphism & CSS Effects",
+      "description": "Blending backdrop-filters, custom overlays, responsive dark backgrounds.",
+      "durationMinutes": 75
+    },
+    {
+      "day": 12,
+      "topic": "Framer Motion Basics",
+      "description": "Creating simple entry stagger animations, transitions, and gesture controls.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 13,
+      "topic": "Route Transitions via AnimatePresence",
+      "description": "Smooth blur, fade, and slide transitions between NextJS route template screens.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 14,
+      "topic": "GSAP ScrollTrigger Core",
+      "description": "Animating dom nodes triggered by page scrolling. Timeline scrubbing.",
+      "durationMinutes": 100
+    },
+    {
+      "day": 15,
+      "topic": "GSAP Count-up & Timelines",
+      "description": "Creating stagger lists and animating numeric targets in real time.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 16,
+      "topic": "Three.js and R3F Integration",
+      "description": "Rendering 3D viewport canvas nodes directly inside React component layouts.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 17,
+      "topic": "Shader Materials & Particle Fields",
+      "description": "Drawing custom buffer geometry and animating particles via frame rate hooks.",
+      "durationMinutes": 110
+    },
+    {
+      "day": 18,
+      "topic": "R3F OrbitControls & Interactivity",
+      "description": "Capturing touch/drag events and mapping coordinates onto R3F canvas entities.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 19,
+      "topic": "Performance Profiling in DevTools",
+      "description": "Identifying bottle-necks, unnecessary re-render triggers, and flamegraph details.",
+      "durationMinutes": 85
+    },
+    {
+      "day": 20,
+      "topic": "Webpack vs Turbopack Configs",
+      "description": "Build optimizations, environment variable injection, and bundler configurations.",
+      "durationMinutes": 60
+    },
+    {
+      "day": 21,
+      "topic": "NextJS Server Components",
+      "description": "RSC architecture, data fetching directly in components, and caching layers.",
+      "durationMinutes": 100
+    },
+    {
+      "day": 22,
+      "topic": "NextJS Server Actions",
+      "description": "Securing data mutations, form states, and progressive enhancement layers.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 23,
+      "topic": "Middlewares and JWT Security",
+      "description": "Intercepting routing contexts to check cookie assertions and route access gates.",
+      "durationMinutes": 75
+    },
+    {
+      "day": 24,
+      "topic": "Optimistic UI Updates",
+      "description": "Using UseOptimistic hook to instantly render feedback patterns on mutations.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 25,
+      "topic": "API Routes & Edge Handlers",
+      "description": "Deploying API scripts and managing low-latency edge computing scripts.",
+      "durationMinutes": 80
+    },
+    {
+      "day": 26,
+      "topic": "Recharts and Visual Analytics",
+      "description": "Rendering charts, radar graphs, gauges, and metrics summaries.",
+      "durationMinutes": 95
+    },
+    {
+      "day": 27,
+      "topic": "Unit Testing with Vitest",
+      "description": "Writing unit assertions and mocking server/database triggers.",
+      "durationMinutes": 100
+    },
+    {
+      "day": 28,
+      "topic": "Integration Tests & playwright",
+      "description": "Simulating full browser user sessions and testing path routing inputs.",
+      "durationMinutes": 120
+    },
+    {
+      "day": 29,
+      "topic": "SEO and Web Vitals Checks",
+      "description": "Maximizing Lighthouse rating targets, meta tag setups, and layout shift audits.",
+      "durationMinutes": 70
+    },
+    {
+      "day": 30,
+      "topic": "Production Build & Tree Shaking",
+      "description": "Auditing bundles and removing unused framework packages from compilation.",
+      "durationMinutes": 90
+    },
+    {
+      "day": 31,
+      "topic": "Capstone Simulation Assessments",
+      "description": "Performing interactive mock review sessions and generating feedback reports.",
+      "durationMinutes": 150
+    }
+  ]
+}
