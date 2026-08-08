@@ -26,6 +26,27 @@ export const api = {
         return candidates;
     },
     getCandidateById: async (id: string): Promise<Candidate | null> => {
+        if (id.startsWith("custom_")) {
+            const parts = id.split("_");
+            const name = decodeURIComponent(parts[1]?.replace(/-/g, " ") || "Custom Candidate");
+            const role = decodeURIComponent(parts[2]?.replace(/-/g, " ") || "Software Engineer");
+            return {
+                id,
+                name,
+                role,
+                experience: "4 years",
+                status: "scheduled",
+                score: 0,
+                cohortProgress: 0,
+                completedMissions: [],
+                learningSignals: {
+                    engagement: "High",
+                    strengths: [],
+                    gaps: []
+                },
+                skippedTopicsCount: 0
+            };
+        }
         return candidates.find(c => c.id === id) || null;
     },
     getCurriculum: async () => {
