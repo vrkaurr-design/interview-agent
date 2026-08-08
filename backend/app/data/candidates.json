@@ -1,0 +1,297 @@
+[
+    {
+        "id": "cand-1",
+        "name": "Sarah Connor",
+        "role": "Senior Frontend Engineer",
+        "experience": "5 Years",
+        "status": "passed",
+        "score": 92,
+        "matchScore": 95,
+        "email": "sarah.connor@skygrid.io",
+        "cohortProgress": 95,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "State Management",
+                "completed": true
+            },
+            {
+                "module": "Performance UI",
+                "completed": true
+            }
+        ],
+        "learningSignals": {
+            "engagement": "High",
+            "strengths": [
+                "Virtual DOM tuning",
+                "Zustand Architecture",
+                "TypeScript Typings"
+            ],
+            "gaps": [
+                "Webpack migration dependencies"
+            ]
+        },
+        "skippedTopicsCount": 0
+    },
+    {
+        "id": "cand-2",
+        "name": "Luke Skywalker",
+        "role": "React UI Developer",
+        "experience": "3 Years",
+        "status": "pending",
+        "score": 78,
+        "matchScore": 84,
+        "email": "luke.sky@force.dev",
+        "cohortProgress": 85,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "State Management",
+                "completed": true
+            },
+            {
+                "module": "Performance UI",
+                "completed": false
+            }
+        ],
+        "learningSignals": {
+            "engagement": "High",
+            "strengths": [
+                "CSS Transitions",
+                "Custom Hooks",
+                "Clean Components"
+            ],
+            "gaps": [
+                "Concurrent Mode re-renders",
+                "Profiling tools"
+            ]
+        },
+        "skippedTopicsCount": 1
+    },
+    {
+        "id": "cand-3",
+        "name": "Ellen Ripley",
+        "role": "Fullstack TS Lead",
+        "experience": "7 Years",
+        "status": "passed",
+        "score": 96,
+        "matchScore": 98,
+        "email": "ripley@nostromo.org",
+        "cohortProgress": 100,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "State Management",
+                "completed": true
+            },
+            {
+                "module": "Performance UI",
+                "completed": true
+            },
+            {
+                "module": "NextJS Routing",
+                "completed": true
+            }
+        ],
+        "learningSignals": {
+            "engagement": "High",
+            "strengths": [
+                "Concurrent Rendering",
+                "Server Components",
+                "CI/CD Pipeline"
+            ],
+            "gaps": []
+        },
+        "skippedTopicsCount": 0
+    },
+    {
+        "id": "cand-4",
+        "name": "Tony Stark",
+        "role": "Interactive Frontend specialist",
+        "experience": "8 Years",
+        "status": "passed",
+        "score": 98,
+        "matchScore": 94,
+        "email": "tony@stark.corp",
+        "cohortProgress": 90,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "ThreeJS Fiber",
+                "completed": true
+            },
+            {
+                "module": "Performance UI",
+                "completed": true
+            }
+        ],
+        "learningSignals": {
+            "engagement": "High",
+            "strengths": [
+                "WebGL Graphics R3F",
+                "GSAP ScrollTrigger",
+                "Hardware Acceleration"
+            ],
+            "gaps": [
+                "Tailwind design constraints"
+            ]
+        },
+        "skippedTopicsCount": 2
+    },
+    {
+        "id": "cand-5",
+        "name": "Bruce Banner",
+        "role": "Node/React Engineer",
+        "experience": "6 Years",
+        "status": "scheduled",
+        "score": 82,
+        "matchScore": 88,
+        "email": "bruce@greenlab.edu",
+        "cohortProgress": 70,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "State Management",
+                "completed": true
+            },
+            {
+                "module": "NextJS Routing",
+                "completed": false
+            }
+        ],
+        "learningSignals": {
+            "engagement": "Medium",
+            "strengths": [
+                "Database Query Optimization",
+                "Express REST APIs",
+                "Zustand Store"
+            ],
+            "gaps": [
+                "CSS Grid and Flexbox",
+                "Framer Motion layout animations"
+            ]
+        },
+        "skippedTopicsCount": 3
+    },
+    {
+        "id": "cand-6",
+        "name": "Arthur Dent",
+        "role": "Junior Fullstack QA",
+        "experience": "1 Year",
+        "status": "failed",
+        "score": 52,
+        "matchScore": 60,
+        "email": "arthur@galaxy.guide",
+        "cohortProgress": 42,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": false
+            },
+            {
+                "module": "State Management",
+                "completed": false
+            }
+        ],
+        "learningSignals": {
+            "engagement": "Low",
+            "strengths": [
+                "Unit Testing",
+                "HTML Semantics"
+            ],
+            "gaps": [
+                "Asynchronous flows",
+                "State updates mapping",
+                "React rendering cycle"
+            ]
+        },
+        "skippedTopicsCount": 6
+    },
+    {
+        "id": "cand-7",
+        "name": "Selina Kyle",
+        "role": "UI Engineer",
+        "experience": "4 Years",
+        "status": "pending",
+        "score": 80,
+        "matchScore": 85,
+        "email": "cat@gotham.net",
+        "cohortProgress": 88,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "Performance UI",
+                "completed": true
+            },
+            {
+                "module": "CSS Architecture",
+                "completed": true
+            }
+        ],
+        "learningSignals": {
+            "engagement": "High",
+            "strengths": [
+                "SVGs Custom Animation",
+                "Micro-interactions",
+                "Responsive CSS"
+            ],
+            "gaps": [
+                "Redux Complex actions",
+                "NextJS middlewares"
+            ]
+        },
+        "skippedTopicsCount": 1
+    },
+    {
+        "id": "cand-8",
+        "name": "Peter Parker",
+        "role": "Frontend Trainee",
+        "experience": "6 Months",
+        "status": "pending",
+        "score": 68,
+        "matchScore": 75,
+        "email": "spidey@dailybugle.com",
+        "cohortProgress": 65,
+        "completedMissions": [
+            {
+                "module": "React Hooks",
+                "completed": true
+            },
+            {
+                "module": "CSS Architecture",
+                "completed": false
+            }
+        ],
+        "learningSignals": {
+            "engagement": "Medium",
+            "strengths": [
+                "Rapid Prototyping",
+                "JavaScript Basics",
+                "API fetches"
+            ],
+            "gaps": [
+                "TypeScript compilation",
+                "Zustand stores integration"
+            ]
+        },
+        "skippedTopicsCount": 4
+    }
+]

@@ -7,6 +7,10 @@ import curriculumData from "../data/curriculum.json";
 
 const curriculum = curriculumData.days as CurriculumDay[];
 
+function getErrorMessage(error: unknown, fallback: string) {
+    return error instanceof Error ? error.message : fallback;
+}
+
 export function useInterviewSession(candidateId: string, initialSessionId: string | null) {
     const [sessionId] = useState(() => initialSessionId || `sess-${Date.now()}`);
     const [messages, setMessages] = useState<InterviewMessage[]>([]);
@@ -23,9 +27,30 @@ export function useInterviewSession(candidateId: string, initialSessionId: strin
     const [coveredModules, setCoveredModules] = useState<string[]>([]);
     const [questionCount, setQuestionCount] = useState(0);
 
-    const evaluateCoverage = useCallback((text: string) => {
-        const matchedDays = new Set<number>(coveredDays);
-        const matchedModules = new Set<string>(coveredModules);
+    const moduleForDay = useCallback((day: number) => {
+        if (day <= 3) return "Environment & Tooling";
+        if (day <= 6) return "Data Foundations";
+        if (day <= 10) return "Embeddings & Vector Search";
+        if (day <= 15) return "LLM Core, Prompting & Fine-Tuning";
+        if (day <= 20) return "Chatbot Application Build";
+        if (day <= 24) return "Agentic AI & MCP";
+        if (day <= 28) return "Evaluation, Security & Deployment";
+        return "Production & Capstone";
+    }, []);
+
+    const addDayCoverage = useCallback((day: number) => {
+        setCoveredDays((prev) => Array.from(new Set([...prev, day])));
+        setCoveredModules((prev) => Array.from(new Set([...prev, moduleForDay(day)])));
+    }, [moduleForDay]);
+
+    const evaluateCoverage = useCallback((text: string, dayFocus?: number) => {
+        if (dayFocus) {
+            addDayCoverage(dayFocus);
+            return;
+        }
+
+        const matchedDays = new Set<number>();
+        const matchedModules = new Set<string>();
 
         curriculum.forEach((item) => {
             const searchStr = `${item.topic} ${item.description}`.toLowerCase();
@@ -64,9 +89,9 @@ export function useInterviewSession(candidateId: string, initialSessionId: strin
             }
         });
 
-        setCoveredDays(Array.from(matchedDays));
-        setCoveredModules(Array.from(matchedModules));
-    }, [coveredDays, coveredModules]);
+        setCoveredDays((prev) => Array.from(new Set([...prev, ...matchedDays])));
+        setCoveredModules((prev) => Array.from(new Set([...prev, ...matchedModules])));
+    }, [addDayCoverage]);
 
     const initializeSession = useCallback(async (candidate: Candidate) => {
         if (isInitializedRef.current) return;
@@ -89,11 +114,11 @@ export function useInterviewSession(candidateId: string, initialSessionId: strin
 
             setMessages([initialMessage]);
             setQuestionCount(1);
-            evaluateCoverage(response.reply);
+            evaluateCoverage(response.reply, response.dayFocus);
             if (response.latency) setLatency(response.latency);
-        } catch (err: any) {
+        } catch (err: unknown) {
             isInitializedRef.current = false;
-            setError(err.message || "Failed to initiate session. Please check connection.");
+            setError(getErrorMessage(err, "Failed to initiate session. Please check connection."));
         } finally {
             setIsLoading(false);
         }
@@ -130,7 +155,7 @@ export function useInterviewSession(candidateId: string, initialSessionId: strin
 
             setMessages((prev) => [...prev, replyMsg]);
             setQuestionCount((q) => q + 1);
-            evaluateCoverage(response.reply);
+            evaluateCoverage(response.reply, response.dayFocus);
             if (response.latency) setLatency(response.latency);
 
             if (response.done) {
@@ -139,8 +164,8 @@ export function useInterviewSession(candidateId: string, initialSessionId: strin
                     setFeedback(response.feedback);
                 }
             }
-        } catch (err: any) {
-            setError(err.message || "Message delivery failed.");
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, "Message delivery failed."));
         } finally {
             setIsLoading(false);
         }
