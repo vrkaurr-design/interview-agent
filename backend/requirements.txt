@@ -4,3 +4,4 @@ pydantic-settings
 google-genai
 python-dotenv
 pytest
+requests

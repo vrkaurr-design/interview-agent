@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from typing import Any, TypeVar
+import requests
 
 from pydantic import BaseModel, ValidationError
 
@@ -27,10 +28,53 @@ def _extract_json(text: str) -> str:
     return stripped[start : end + 1]
 
 
+def _generate_groq(prompt: str, json_mode: bool = False) -> str:
+    settings = get_settings()
+    if not settings.groq_api_key:
+        raise LLMUnavailableError("GROQ_API_KEY is not configured")
+
+    headers = {
+        "Authorization": f"Bearer {settings.groq_api_key}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "model": settings.groq_model_name,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.2,
+    }
+    if json_mode:
+        payload["response_format"] = {"type": "json_object"}
+
+    try:
+        response = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=30.0,
+        )
+        response.raise_for_status()
+    except Exception as exc:
+        raise LLMUnavailableError(f"Groq API call failed: {exc}") from exc
+
+    result = response.json()
+    try:
+        return result["choices"][0]["message"]["content"]
+    except (KeyError, IndexError) as exc:
+        raise RuntimeError(f"Groq API returned malformed response: {result}") from exc
+
+
 def generate_json(prompt: str, schema_model: type[T]) -> T:
     settings = get_settings()
+    if settings.groq_api_key:
+        text = _generate_groq(prompt, json_mode=True)
+        try:
+            data: Any = json.loads(_extract_json(text))
+            return schema_model.model_validate(data)
+        except (json.JSONDecodeError, ValidationError, ValueError) as exc:
+            raise RuntimeError(f"Groq returned malformed structured output: {exc}") from exc
+
     if not settings.gemini_api_key:
-        raise LLMUnavailableError("GEMINI_API_KEY is not configured")
+        raise LLMUnavailableError("Neither GROQ_API_KEY nor GEMINI_API_KEY is configured")
 
     try:
         from google import genai
@@ -55,7 +99,7 @@ def generate_json(prompt: str, schema_model: type[T]) -> T:
 
     text = getattr(response, "text", "") or ""
     try:
-        data: Any = json.loads(_extract_json(text))
+        data = json.loads(_extract_json(text))
         return schema_model.model_validate(data)
     except (json.JSONDecodeError, ValidationError, ValueError) as exc:
         raise RuntimeError(f"Gemini returned malformed structured output: {exc}") from exc
@@ -63,8 +107,11 @@ def generate_json(prompt: str, schema_model: type[T]) -> T:
 
 def generate_text(prompt: str) -> str:
     settings = get_settings()
+    if settings.groq_api_key:
+        return _generate_groq(prompt, json_mode=False).strip()
+
     if not settings.gemini_api_key:
-        raise LLMUnavailableError("GEMINI_API_KEY is not configured")
+        raise LLMUnavailableError("Neither GROQ_API_KEY nor GEMINI_API_KEY is configured")
 
     try:
         from google import genai

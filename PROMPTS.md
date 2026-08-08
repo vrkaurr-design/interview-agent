@@ -489,3 +489,9 @@ We ran a full verification of the implemented FastAPI backend against the Next.j
    - Completed an 8-turn technical dialogue covering React 19 core features, TypeScript Generics, Context API, Zustand, Chrome DevTools profiling, Webpack/Turbopack, and Virtual DOM.
    - Validated that the curriculum coverage checklist dynamically updated at each stage.
    - Verified that the final evaluation feedback report rendered correctly (Score: 64/100, Competency, specific strengths checkmarks, gaps, next steps, and saved successfully).
+
+4. **Groq API Integration**:
+   - Integrated Groq API (model: `llama-3.3-70b-versatile`) as an alternative high-performance LLM engine.
+   - Updated `config.py` and `requirements.txt` to configure Groq credentials and package dependencies.
+   - Added a dual-engine router in `llm.py` that dynamically executes completions via Groq if `GROQ_API_KEY` is provided, maintaining full fallback capabilities.
+   - Verified integration logic via `test_groq.py` script and ran integration smoke tests successfully.
