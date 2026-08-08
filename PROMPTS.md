@@ -495,3 +495,10 @@ We ran a full verification of the implemented FastAPI backend against the Next.j
    - Updated `config.py` and `requirements.txt` to configure Groq credentials and package dependencies.
    - Added a dual-engine router in `llm.py` that dynamically executes completions via Groq if `GROQ_API_KEY` is provided, maintaining full fallback capabilities.
    - Verified integration logic via `test_groq.py` script and ran integration smoke tests successfully.
+
+5. **Dynamic Topic & Custom Role Support**:
+   - Upgraded the backend to support dynamic technical interviewing for any role (e.g. Python Backend Developer, Product Manager, etc.) instead of being locked to the 1..31 React days.
+   - If a candidate with empty/no missions is initialized, the system calls Groq to generate a customized 8-day curriculum of core concepts for that candidate's specific `jobRole`.
+   - Populated the session store with this dynamic curriculum and generated a realistic candidate scouting report (marking some generated days as passed/failed/skipped).
+   - Structured the interviewer prompts to map numeric days to these custom topics, forcing the model to generate role-appropriate follow-up questions and final diagnostics.
+   - Added a verification test in `smoke_custom_role.py` to confirm successful curriculum creation and E2E interviewing for any subject.

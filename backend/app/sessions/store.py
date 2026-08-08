@@ -25,6 +25,7 @@ class InterviewSession:
     started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     done: bool = False
     awaiting_feedback: bool = False
+    custom_curriculum: dict[int, str] = field(default_factory=dict)
 
 
 class SessionStore:
@@ -46,7 +47,11 @@ class SessionStore:
     def create(self, session_id: str, candidate: Candidate) -> InterviewSession:
         self.sweep_expired()
         profile = build_candidate_profile(candidate)
-        session = InterviewSession(sessionId=session_id, candidate_profile=profile)
+        session = InterviewSession(
+            sessionId=session_id,
+            candidate_profile=profile,
+            custom_curriculum=profile.custom_curriculum
+        )
         with self._lock:
             self._sessions[session_id] = session
         return session

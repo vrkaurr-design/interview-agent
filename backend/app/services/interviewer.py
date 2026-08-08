@@ -18,10 +18,14 @@ def select_opening_day(profile: CandidateProfile) -> int:
         return profile.shaky_days[0].day
     if profile.skipped_days:
         return profile.skipped_days[0].day
+    if profile.custom_curriculum:
+        return next(iter(profile.custom_curriculum.keys()))
     return all_day_numbers()[0]
 
 
-def _day_title(day_number: int) -> str:
+def _day_title(day_number: int, profile: CandidateProfile | None = None) -> str:
+    if profile and profile.custom_curriculum and day_number in profile.custom_curriculum:
+        return profile.custom_curriculum[day_number]
     day = DAYS_BY_NUMBER.get(day_number)
     return day.label if day else f"Day {day_number}"
 
@@ -33,9 +37,11 @@ def _candidate_day_pool(profile: CandidateProfile) -> list[ProfileDay]:
         if day.day not in seen:
             ordered.append(day)
             seen.add(day.day)
-    for day_number in all_day_numbers():
+    day_source = profile.custom_curriculum.keys() if profile.custom_curriculum else all_day_numbers()
+    for day_number in day_source:
         if day_number not in seen:
-            ordered.append(ProfileDay(day=day_number, title=_day_title(day_number)))
+            title = profile.custom_curriculum.get(day_number) or _day_title(day_number, profile)
+            ordered.append(ProfileDay(day=day_number, title=title))
             seen.add(day_number)
     return ordered
 
@@ -65,7 +71,7 @@ def deterministic_question(profile: CandidateProfile, asked_days: set[int], ques
 
 def generate_opening_question(profile: CandidateProfile) -> str:
     opening_day = select_opening_day(profile)
-    title = _day_title(opening_day)
+    title = _day_title(opening_day, profile)
     prompt = f"""
 You are a senior engineer conducting a real technical interview.
 Be conversational and curious, not robotic. Ask exactly one question.
@@ -97,14 +103,20 @@ def _history_for_prompt(session: InterviewSession) -> str:
 
 
 def _turn_prompt(session: InterviewSession, candidate_message: str) -> str:
-    valid_days = ", ".join(str(day) for day in all_day_numbers())
+    profile = session.candidate_profile
+    valid_days_list = sorted(profile.custom_curriculum.keys()) if profile.custom_curriculum else all_day_numbers()
+    valid_days = ", ".join(str(day) for day in valid_days_list)
+    topic_mapping = "\n".join(
+        f"- Day {d}: {profile.custom_curriculum.get(d) or _day_title(d, profile)}"
+        for d in valid_days_list
+    )
     return f"""
 You are a senior engineer conducting a real technical interview.
 Ask one natural follow-up question at a time. Keep responses to 2-4 sentences.
 Do not announce question numbers or coverage requirements.
 
 Candidate scouting report:
-{session.candidate_profile.to_prompt_context()}
+{profile.to_prompt_context()}
 
 Conversation so far:
 {_history_for_prompt(session)}
@@ -115,7 +127,8 @@ Latest candidate answer:
 State:
 - asked_days: {sorted(session.asked_days)}
 - question_count: {session.question_count}
-- valid curriculum days: {valid_days}
+- valid curriculum days and topics:
+{topic_mapping}
 - minimum before conclusion: {MIN_QUESTIONS} questions and {MIN_DAYS} distinct days
 - hard maximum: {MAX_QUESTIONS} questions
 
@@ -142,7 +155,8 @@ def generate_next_turn(session: InterviewSession, candidate_message: str) -> tup
         except Exception:
             result = deterministic_question(session.candidate_profile, session.asked_days, session.question_count)
 
-    if result.day_focus not in DAYS_BY_NUMBER:
+    valid_days_set = set(session.candidate_profile.custom_curriculum.keys()) if session.candidate_profile.custom_curriculum else set(DAYS_BY_NUMBER.keys())
+    if result.day_focus not in valid_days_set:
         result.day_focus = deterministic_question(session.candidate_profile, session.asked_days, session.question_count).day_focus
 
     session.asked_days.add(result.day_focus)

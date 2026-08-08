@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from app.models.schemas import CustomCurriculumSchema, CustomDayTopic
+from app.services.llm import generate_json
 
 from app.data.loader import DAYS_BY_NUMBER, TOTAL_COHORT_DAYS, get_module_for_day
 from app.models.schemas import Candidate, CandidateMission, CurriculumDay
@@ -31,6 +34,7 @@ class CandidateProfile:
     first_try_ratio: float
     consistency: float
     raw_candidate: Candidate
+    custom_curriculum: dict[int, str] = field(default_factory=dict)
 
     def to_prompt_context(self) -> str:
         def render_days(label: str, days: list[ProfileDay]) -> str:
@@ -110,8 +114,69 @@ def _expand_frontend_missions(candidate: Candidate) -> list[CandidateMission]:
     return missions
 
 
+def _generate_custom_curriculum(role: str) -> dict[int, str]:
+    prompt = f"""
+    You are a senior technical interviewer designing a custom 8-day curriculum of core topics for the job role: "{role}".
+    Each day must have a clear topic title and a brief description.
+    Return JSON only matching the schema.
+    """
+    try:
+        data = generate_json(prompt, CustomCurriculumSchema)
+        return {item.day: f"{item.topic} - {item.description}" for item in data.days}
+    except Exception:
+        return {
+            1: "Core Concepts & Architecture",
+            2: "Data Structures & Algorithms",
+            3: "Data Fetching & APIs",
+            4: "State Management & Logic Flow",
+            5: "Performance & Optimizations",
+            6: "Testing & Automation",
+            7: "Security & Validation",
+            8: "Deployment & Production Capstones"
+        }
+
+
+def _expand_custom_missions(custom_curriculum: dict[int, str]) -> list[CandidateMission]:
+    missions: list[CandidateMission] = []
+    outcomes = {
+        1: {"passed": True, "attempts": 1, "skipped": False},
+        2: {"passed": True, "attempts": 1, "skipped": False},
+        3: {"passed": True, "attempts": 3, "skipped": False},
+        4: {"passed": False, "attempts": None, "skipped": True},
+        5: {"passed": True, "attempts": 1, "skipped": False},
+        6: {"passed": True, "attempts": 3, "skipped": False},
+        7: {"passed": False, "attempts": None, "skipped": True},
+        8: {"passed": True, "attempts": 1, "skipped": False},
+    }
+    for day, title in custom_curriculum.items():
+        outcome = outcomes.get(day, {"passed": True, "attempts": 1, "skipped": False})
+        missions.append(
+            CandidateMission(
+                day=day,
+                title=title,
+                passed=outcome["passed"],
+                attempts=outcome["attempts"],
+                skipped=outcome["skipped"],
+            )
+        )
+    return missions
+
+
 def build_candidate_profile(candidate: Candidate) -> CandidateProfile:
-    missions = _expand_frontend_missions(candidate)
+    custom_curriculum: dict[int, str] = {}
+    has_missions = bool(candidate.missions) or bool(candidate.completedMissions)
+
+    if not has_missions:
+        role_name = candidate.display_role
+        custom_curriculum = _generate_custom_curriculum(role_name)
+        missions = _expand_custom_missions(custom_curriculum)
+    else:
+        missions = _expand_frontend_missions(candidate)
+        for mission in missions:
+            if mission.day is not None:
+                day_info = DAYS_BY_NUMBER.get(mission.day)
+                custom_curriculum[mission.day] = day_info.label if day_info else (mission.title or f"Day {mission.day}")
+
     strong_days: list[ProfileDay] = []
     shaky_days: list[ProfileDay] = []
     skipped_days: list[ProfileDay] = []
@@ -120,10 +185,21 @@ def build_candidate_profile(candidate: Candidate) -> CandidateProfile:
     for mission in missions:
         if mission.day is None:
             continue
-        profile_day = _profile_day(mission.day, mission)
+        title = custom_curriculum.get(mission.day, mission.title or f"Day {mission.day}")
+        profile_day = ProfileDay(
+            day=mission.day,
+            title=title,
+            attempts=mission.attempts,
+            skipped=bool(mission.skipped)
+        )
         module = get_module_for_day(mission.day)
         if module and module.title not in module_titles:
             module_titles.append(module.title)
+        elif not module and not has_missions:
+            mod_num = (mission.day - 1) // 2 + 1
+            mod_title = f"Topic Area {mod_num}"
+            if mod_title not in module_titles:
+                module_titles.append(mod_title)
 
         if mission.skipped:
             skipped_days.append(profile_day)
@@ -153,4 +229,5 @@ def build_candidate_profile(candidate: Candidate) -> CandidateProfile:
         first_try_ratio=(first_try / completed) if completed else 0.0,
         consistency=commit_days / TOTAL_COHORT_DAYS,
         raw_candidate=candidate,
+        custom_curriculum=custom_curriculum
     )

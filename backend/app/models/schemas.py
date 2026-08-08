@@ -143,6 +143,16 @@ class StructuredTurn(BaseModel):
     conclude: bool = False
 
 
+class CustomDayTopic(BaseModel):
+    day: int
+    topic: str
+    description: str
+
+
+class CustomCurriculumSchema(BaseModel):
+    days: list[CustomDayTopic]
+
+
 Role = Literal["interviewer", "candidate"]
 
 
