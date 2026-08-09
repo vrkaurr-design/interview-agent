@@ -2,10 +2,6 @@
 
 Hackathon interview agent with a Next.js frontend and a FastAPI backend.
 
-Backend docs: [backend/README.md](backend/README.md)
-
-Prompt/history log: [PROMPTS.md](PROMPTS.md)
-
 ## Getting Started
 
 Run the backend:
